@@ -6,6 +6,11 @@
 	<dict>
 		<key>NSExtensionAttributes</key>
 		<dict>
+            <key>MEComposeSession</key>
+            <dict>
+                <key>MEComposeIconToolTip</key>
+                <string>MailTools</string>
+            </dict>
 			<key>MEExtensionCapabilities</key>
 			<array>
 				<string>MEComposeSessionHandler</string>
