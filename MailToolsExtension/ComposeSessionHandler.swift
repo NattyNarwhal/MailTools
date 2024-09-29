@@ -6,7 +6,6 @@
 //
 
 import MailKit
-import MimeParser
 import SwiftUI
 import os
 
@@ -22,49 +21,50 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler {
         logger.debug("End session")
     }
     
-    // MARK: - Session storage
-    
-    var parser: Parser?
-    
-    func updateMessage(session: MEComposeSession) {
-        if let rawData = session.mailMessage.rawData,
-           let rawString = String(data: rawData, encoding: .ascii) {
-            logger.debug("Successfully got message")
-            self.parser = try? Parser(message: rawString)
-        } else {
-            logger.debug("Failed to get message (lifecycle?)")
-        }
-    }
-
-    // MARK: - Displaying Custom Compose Options
-
     func viewController(for session: MEComposeSession) -> MEExtensionViewController {
         logger.debug("VC")
-        updateMessage(session: session) // so redisplay gets latest version
+        // TODO: Should we be caching this?
         let extensionVC = MEExtensionViewController()
         let csv = ComposeSessionView(sessionHandler: self)
         extensionVC.view = NSHostingView(rootView: csv)
         return extensionVC
     }
     
-    // MARK: - Confirming Message Delivery
-    
+    // This *MUST* return an NSError due to XPC only recognizing real NSErrors, not things that implement the protocol!
     func allowMessageSendForSession(_ session: MEComposeSession, completion: @escaping (Error?) -> Void) {
         logger.debug("Allow message send?")
-        updateMessage(session: session)
-        if let parsedMessage = self.parser?.mimeMessage {
-            print(parsedMessage)
-            
-            let error = NSError(domain: Bundle.main.bundleIdentifier!, code: 1, userInfo: [
-                // failure/recovery are not used
-                NSLocalizedDescriptionKey: "The email should be plain text. Go to Format -> Make Plain Text to make this email no longer HTML.",
-            ])
-            
-            completion(error)
-            return
-        }
         
-        completion(nil)
+        // TODO: Check to see if we should be even checking against this email in the first place
+        
+        do {
+            let parser = try Parser(session: session)
+            
+#if DEBUG
+            print("-- MIME --")
+            print(parser.mimeMessage)
+            print("-- HTML --")
+            print(parser.htmlDocument)
+            print("-- LINE IR -- ")
+            print(parser.getLines())
+#endif
+            
+            if !parser.isPlainText() {
+                throw NSError(mailToolsMessage: "The email should be plain text. Go to Format -> Make Plain Text to make this email no longer HTML.")
+            }
+            
+            let exceedingLines = parser.linesThatExceed(columns: 72)
+            if let exceedingLine = exceedingLines.first {
+                throw NSError(mailToolsMessage: "The line \"\(exceedingLine.text)\" is longer than 72 characters.")
+            }
+            
+            
+            throw NSError(mailToolsMessage: "Last chance...")
+            //completion(nil)
+        }
+        catch {
+            logger.warning("\(error.localizedDescription, privacy: .public)")
+            completion(error)
+        }
     }
 }
 

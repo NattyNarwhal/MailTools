@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3E5FBDF42CA7748D00EADEF7 /* MailToolsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3E5FBE032CA8B5BE00EADEF7 /* MimeParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE022CA8B5BE00EADEF7 /* MimeParser */; };
+		3E5FBE082CA9EB3A00EADEF7 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E5FBE032CA8B5BE00EADEF7 /* MimeParser in Frameworks */,
+				3E5FBE082CA9EB3A00EADEF7 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +150,7 @@
 			name = MailToolsExtension;
 			packageProductDependencies = (
 				3E5FBE022CA8B5BE00EADEF7 /* MimeParser */,
+				3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */,
 			);
 			productName = MailToolsExtension;
 			productReference = 3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */;
@@ -182,6 +185,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				3E5FBE012CA8B5BE00EADEF7 /* XCRemoteSwiftPackageReference "MimeParser" */,
+				3E5FBE062CA9EB3A00EADEF7 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3E5FBDD12CA7744100EADEF7 /* Products */;
@@ -504,6 +508,14 @@
 				minimumVersion = 0.2.5;
 			};
 		};
+		3E5FBE062CA9EB3A00EADEF7 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -511,6 +523,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3E5FBE012CA8B5BE00EADEF7 /* XCRemoteSwiftPackageReference "MimeParser" */;
 			productName = MimeParser;
+		};
+		3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3E5FBE062CA9EB3A00EADEF7 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
