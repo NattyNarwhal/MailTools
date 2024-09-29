@@ -92,9 +92,10 @@ class Parser {
             case .line(let text):
                 return text
             case .quoted(let lines):
-                return "> \(lines.first?.text ?? "")"
+                return lines.map { "> \($0.text)" }.joined()
             case .indented(let lines):
-                return "    \(lines.first?.text ?? "")"
+                // Mail.app uses 6 chars for identation it seems
+                return lines.map { "      \($0.text)" }.joined()
             }
         }
     }
