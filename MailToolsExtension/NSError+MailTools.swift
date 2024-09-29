@@ -9,7 +9,7 @@ import Foundation
 
 extension NSError {
     convenience init(mailToolsMessage: String) {
-        // failure/recovery are not used
+        // failure/recovery are not used (XXX: Can we indicate severity?)
         self.init(domain: Bundle.main.bundleIdentifier!, code: 1, userInfo: [NSLocalizedDescriptionKey: mailToolsMessage])
     }
 }

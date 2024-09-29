@@ -24,7 +24,12 @@ class Parser {
     }
     
     init(message messageString: String) throws {
-        self.mimeMessage = try mimeParser.parse(messageString)
+        // We have to wrap Swift errors in NSError, since the extension XPC behind the scenes only deals with NSError
+        do {
+            self.mimeMessage = try mimeParser.parse(messageString)
+        } catch {
+            throw NSError(mailToolsMessage: "Couldn't parse the HTML inside of the message.\r\n\r\nMimeParser error: \(error)")
+        }
         
         // Mail.app does NOT use the text/plain porportion.
         // If it does, we should scan it, but AFAIK, it doesn't as of macOS 14.
@@ -39,18 +44,24 @@ class Parser {
             throw NSError(mailToolsMessage: "Couldn't get the body in the HTML component of the message.")
         }
         
-        self.htmlDocument = try SwiftSoup.parse(bodyString)
+        do {
+            self.htmlDocument = try SwiftSoup.parse(bodyString)
+        } catch SwiftSoup.Exception.Error(type: _, Message: let message) {
+            throw NSError(mailToolsMessage: "Couldn't parse the HTML inside of the message.\r\n\r\nSwiftSoup message: \(message)")
+        }
         if self.htmlDocument.body() == nil {
-            throw NSError(mailToolsMessage: "Couldn't parse the HTML inside of the message.")
+            throw NSError(mailToolsMessage: "The body inside the HTML is missing.")
         }
     }
     
     convenience init(session: MEComposeSession) throws {
+        // This is only ever set/updated when Mail.app actually invokes you,
+        // you can't get it i.e. when it calls for your view controller.
         guard let rawData = session.mailMessage.rawData else {
             throw NSError(mailToolsMessage: "There was no data in the mail message.")
         }
         
-        // RFC822 messages should be plain ASCII with encoded Unicode characters
+        // RFC822 messages should be plain ASCII with encoded Unicode characters (MIME handles that)
         guard let rawString = String(data: rawData, encoding: .ascii) else {
             throw NSError(mailToolsMessage: "Couldn't decode the raw message into a string.")
         }
