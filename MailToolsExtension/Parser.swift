@@ -80,6 +80,21 @@ class Parser {
         }
     }
     
+    func isTopPosting() -> Bool {
+        guard let elements = try? self.htmlBody.getAllElements() else {
+            return false
+        }
+        
+        // When writing a message, Mail.app will put the cursor at the beginning,
+        // between the cursor and the quoted message, it puts a <br id="lineBreakAtBeginningOfMessage">.
+        // This lets us apply a heuristic where if the user just starts blindly typing,
+        // it will keep that line break unless the user mangles it further.
+        // If the user deletes the top bit, it might break the first line out of the <blockquote>
+        // and into the main body, but it tends to be a single line, and after the quote (then reply).
+        // TODO: More advanced heuristics
+        return elements.count { $0.id() == "lineBreakAtBeginningOfMessage" } > 0
+    }
+    
     // #MARK: - Line Gathering
     
     enum Line {

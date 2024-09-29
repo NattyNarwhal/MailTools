@@ -57,6 +57,9 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler {
                 throw NSError(mailToolsMessage: "The line \"\(exceedingLine.text)\" is longer than 72 characters.")
             }
             
+            if parser.isTopPosting() {
+                throw NSError(mailToolsMessage: "The reply is written at the beginning of the email. Move your reply inline or below the quote.")
+            }
             
             throw NSError(mailToolsMessage: "Last chance...")
             //completion(nil)
