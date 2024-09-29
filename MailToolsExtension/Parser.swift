@@ -36,7 +36,7 @@ class Parser {
         }
         
         guard let bodyString = try? firstHtmlMime.decodedContentString() else {
-            throw NSError(mailToolsMessage: "Couldn't get the body the HTML component of the message.")
+            throw NSError(mailToolsMessage: "Couldn't get the body in the HTML component of the message.")
         }
         
         self.htmlDocument = try SwiftSoup.parse(bodyString)
