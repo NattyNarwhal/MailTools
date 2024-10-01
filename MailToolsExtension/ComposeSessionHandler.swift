@@ -9,6 +9,8 @@ import MailKit
 import SwiftUI
 import os
 
+import MailToolsCommon // MailParser, NSError+MailTools
+
 fileprivate let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "ComposeSessionHandler")
 
 class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject {
@@ -41,15 +43,15 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
         // TODO: Should we aggregate multiple issues?
         
         do {
-            let parser = try Parser(session: session)
+            let parser = try MailParser(session: session)
             
 #if DEBUG
             print("-- MIME --")
-            print(parser.mimeMessage)
+            print(parser.mimeMessage!)
             print("-- HTML --")
             print(parser.htmlDocument)
             print("-- LINE IR -- ")
-            print(parser.getLines())
+            parser.printLines()
 #endif
             
             if self.checkHtml && !parser.isPlainText() {

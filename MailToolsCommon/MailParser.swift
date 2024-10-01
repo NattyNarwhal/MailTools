@@ -1,6 +1,6 @@
 //
-//  Parser.swift
-//  MailToolsExtension
+//  MailParser.swift
+//  MailToolsCommon
 //
 //  Created by Calvin Buckley on 2024-09-29.
 //
@@ -13,20 +13,32 @@ import os
 
 fileprivate let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Parser")
 
-class Parser {
-    private let mimeParser = MimeParser()
-    
-    let mimeMessage: Mime
-    let htmlDocument: Document
+public class MailParser {
+    // only state we really need to keep is HTML related
+    public var mimeMessage: Mime?
+    public let htmlDocument: Document
     
     private var htmlBody: Element {
         self.htmlDocument.body()!
     }
     
-    init(message messageString: String) throws {
-        // We have to wrap Swift errors in NSError, since the extension XPC behind the scenes only deals with NSError
+    public init(html: String, mimeMessage: Mime? = nil) throws {
+        self.mimeMessage = mimeMessage
         do {
-            self.mimeMessage = try mimeParser.parse(messageString)
+            self.htmlDocument = try SwiftSoup.parse(html)
+        } catch SwiftSoup.Exception.Error(type: _, Message: let message) {
+            throw NSError(mailToolsMessage: "Couldn't parse the HTML inside of the message.\r\n\r\nSwiftSoup message: \(message)")
+        }
+        if self.htmlDocument.body() == nil {
+            throw NSError(mailToolsMessage: "The body inside the HTML is missing.")
+        }
+    }
+    
+    public convenience init(message messageString: String) throws {
+        // We have to wrap Swift errors in NSError, since the extension XPC behind the scenes only deals with NSError
+        var mimeMessage: Mime!
+        do {
+            mimeMessage = try MimeParser().parse(messageString)
         } catch {
             throw NSError(mailToolsMessage: "Couldn't parse the HTML inside of the message.\r\n\r\nMimeParser error: \(error)")
         }
@@ -34,7 +46,7 @@ class Parser {
         // Mail.app does NOT use the text/plain porportion.
         // If it does, we should scan it, but AFAIK, it doesn't as of macOS 14.
         // Instead, scan the first HTML component instead.
-        guard let firstHtmlMime = self.mimeMessage.encapsulatedMimes.first(where: { mime in
+        guard let firstHtmlMime = mimeMessage?.encapsulatedMimes.first(where: { mime in
             mime.header.contentType?.subtype.contains("html") ?? false
         }) else {
             throw NSError(mailToolsMessage: "Couldn't find the HTML component of the message.")
@@ -44,17 +56,10 @@ class Parser {
             throw NSError(mailToolsMessage: "Couldn't get the body in the HTML component of the message.")
         }
         
-        do {
-            self.htmlDocument = try SwiftSoup.parse(bodyString)
-        } catch SwiftSoup.Exception.Error(type: _, Message: let message) {
-            throw NSError(mailToolsMessage: "Couldn't parse the HTML inside of the message.\r\n\r\nSwiftSoup message: \(message)")
-        }
-        if self.htmlDocument.body() == nil {
-            throw NSError(mailToolsMessage: "The body inside the HTML is missing.")
-        }
+        try self.init(html: bodyString, mimeMessage: mimeMessage)
     }
     
-    convenience init(session: MEComposeSession) throws {
+    public convenience init(session: MEComposeSession) throws {
         // This is only ever set/updated when Mail.app actually invokes you,
         // you can't get it i.e. when it calls for your view controller.
         guard let rawData = session.mailMessage.rawData else {
@@ -71,11 +76,11 @@ class Parser {
     
     // #MARK: - Rules
     
-    func isPlainText() -> Bool {
+    public func isPlainText() -> Bool {
         self.htmlBody.hasClass("ApplePlainTextBody")
     }
     
-    func linesThatExceed(columns: Int) -> [Line] {
+    public func linesThatExceed(columns: Int) -> [Line] {
         let lines = getLines()
         
         return lines.filter { line in
@@ -91,7 +96,7 @@ class Parser {
         }
     }
     
-    func isTopPosting() -> Bool {
+    public func isTopPosting() -> Bool {
         // When writing a message, Mail.app will put the cursor at the beginning,
         // between the cursor and the quoted message, it puts a <br id="lineBreakAtBeginningOfMessage">.
         // This lets us apply a heuristic where if the user just starts blindly typing,
@@ -103,24 +108,6 @@ class Parser {
     }
     
     // #MARK: - Line Gathering
-    
-    enum Line {
-        case indented([Line])
-        case quoted([Line])
-        case line(String)
-        
-        var text: String {
-            switch self {
-            case .line(let text):
-                return text
-            case .quoted(let lines):
-                return lines.map { "> \($0.text)" }.joined()
-            case .indented(let lines):
-                // Mail.app uses 6 chars for identation it seems
-                return lines.map { "      \($0.text)" }.joined()
-            }
-        }
-    }
     
     private func getLines(from root: Element) -> [Line] {
         var toReturn: [Line] = [] // really wish i could yield
@@ -146,8 +133,13 @@ class Parser {
         return toReturn
     }
     
-    // XXX: Only should be accessible when !DEBUG
     func getLines() -> [Line] {
         return getLines(from: htmlBody)
     }
+    
+#if DEBUG
+    public func printLines() {
+        print(getLines())
+    }
+#endif
 }

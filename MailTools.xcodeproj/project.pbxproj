@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		3E5FBDF42CA7748D00EADEF7 /* MailToolsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		3E5FBE032CA8B5BE00EADEF7 /* MimeParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE022CA8B5BE00EADEF7 /* MimeParser */; };
-		3E5FBE082CA9EB3A00EADEF7 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */; };
+		3E5FBEAE2CAB27A200EADEF7 /* MimeParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBEAD2CAB27A200EADEF7 /* MimeParser */; };
+		3E5FBEB02CAB27A200EADEF7 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBEAF2CAB27A200EADEF7 /* SwiftSoup */; };
+		3E5FBEB12CAB27A700EADEF7 /* libMailToolsCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */; };
+		3E5FBEBA2CAB283E00EADEF7 /* libMailToolsCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,6 +21,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 3E5FBDE52CA7748D00EADEF7;
 			remoteInfo = MailToolsExtension;
+		};
+		3E5FBEA82CAB275400EADEF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E5FBDC82CA7744100EADEF7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E5FBE982CAB273800EADEF7;
+			remoteInfo = MailToolsCommon;
+		};
+		3E5FBEAA2CAB275F00EADEF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E5FBDC82CA7744100EADEF7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E5FBE982CAB273800EADEF7;
+			remoteInfo = MailToolsCommon;
+		};
+		3E5FBEBB2CAB283E00EADEF7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E5FBDC82CA7744100EADEF7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E5FBE982CAB273800EADEF7;
+			remoteInfo = MailToolsCommon;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -39,6 +62,8 @@
 /* Begin PBXFileReference section */
 		3E5FBDD02CA7744100EADEF7 /* MailTools.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MailTools.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MailToolsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMailToolsCommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E5FBEB62CAB283D00EADEF7 /* MailToolsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MailToolsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -48,6 +73,27 @@
 				Info.plist,
 			);
 			target = 3E5FBDE52CA7748D00EADEF7 /* MailToolsExtension */;
+		};
+		3E5FBECF2CAB428500EADEF7 /* Exceptions for "MailToolsCommon" folder in "MailTools" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"View+Modify.swift",
+			);
+			target = 3E5FBDCF2CA7744100EADEF7 /* MailTools */;
+		};
+		3E5FBED02CAB428500EADEF7 /* Exceptions for "MailToolsCommon" folder in "MailToolsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"View+Modify.swift",
+			);
+			target = 3E5FBDE52CA7748D00EADEF7 /* MailToolsExtension */;
+		};
+		3E5FBED12CAB428500EADEF7 /* Exceptions for "MailToolsCommon" folder in "MailToolsCommon" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"View+Modify.swift",
+			);
+			target = 3E5FBE982CAB273800EADEF7 /* MailToolsCommon */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -65,6 +111,21 @@
 			path = MailToolsExtension;
 			sourceTree = "<group>";
 		};
+		3E5FBE9A2CAB273800EADEF7 /* MailToolsCommon */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3E5FBECF2CAB428500EADEF7 /* Exceptions for "MailToolsCommon" folder in "MailTools" target */,
+				3E5FBED02CAB428500EADEF7 /* Exceptions for "MailToolsCommon" folder in "MailToolsExtension" target */,
+				3E5FBED12CAB428500EADEF7 /* Exceptions for "MailToolsCommon" folder in "MailToolsCommon" target */,
+			);
+			path = MailToolsCommon;
+			sourceTree = "<group>";
+		};
+		3E5FBEB72CAB283D00EADEF7 /* MailToolsTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MailToolsTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,8 +140,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E5FBE032CA8B5BE00EADEF7 /* MimeParser in Frameworks */,
-				3E5FBE082CA9EB3A00EADEF7 /* SwiftSoup in Frameworks */,
+				3E5FBEB12CAB27A700EADEF7 /* libMailToolsCommon.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5FBE972CAB273800EADEF7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E5FBEAE2CAB27A200EADEF7 /* MimeParser in Frameworks */,
+				3E5FBEB02CAB27A200EADEF7 /* SwiftSoup in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5FBEB32CAB283D00EADEF7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E5FBEBA2CAB283E00EADEF7 /* libMailToolsCommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +169,9 @@
 			children = (
 				3E5FBDD22CA7744100EADEF7 /* MailTools */,
 				3E5FBDE72CA7748D00EADEF7 /* MailToolsExtension */,
+				3E5FBE9A2CAB273800EADEF7 /* MailToolsCommon */,
+				3E5FBEB72CAB283D00EADEF7 /* MailToolsTests */,
+				3E5FBEAC2CAB27A200EADEF7 /* Frameworks */,
 				3E5FBDD12CA7744100EADEF7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -101,11 +181,30 @@
 			children = (
 				3E5FBDD02CA7744100EADEF7 /* MailTools.app */,
 				3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */,
+				3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */,
+				3E5FBEB62CAB283D00EADEF7 /* MailToolsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
+		3E5FBEAC2CAB27A200EADEF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3E5FBE952CAB273800EADEF7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		3E5FBDCF2CA7744100EADEF7 /* MailTools */ = {
@@ -120,6 +219,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3E5FBEAB2CAB275F00EADEF7 /* PBXTargetDependency */,
 				3E5FBDF32CA7748D00EADEF7 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -143,6 +243,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3E5FBEA92CAB275400EADEF7 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				3E5FBDE72CA7748D00EADEF7 /* MailToolsExtension */,
@@ -155,6 +256,55 @@
 			productName = MailToolsExtension;
 			productReference = 3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
+		};
+		3E5FBE982CAB273800EADEF7 /* MailToolsCommon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E5FBEA12CAB273800EADEF7 /* Build configuration list for PBXNativeTarget "MailToolsCommon" */;
+			buildPhases = (
+				3E5FBE952CAB273800EADEF7 /* Headers */,
+				3E5FBE962CAB273800EADEF7 /* Sources */,
+				3E5FBE972CAB273800EADEF7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E5FBEA72CAB274B00EADEF7 /* PBXTargetDependency */,
+				3E5FBEA52CAB274800EADEF7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3E5FBE9A2CAB273800EADEF7 /* MailToolsCommon */,
+			);
+			name = MailToolsCommon;
+			packageProductDependencies = (
+				3E5FBEAD2CAB27A200EADEF7 /* MimeParser */,
+				3E5FBEAF2CAB27A200EADEF7 /* SwiftSoup */,
+			);
+			productName = MailToolsCommon;
+			productReference = 3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		3E5FBEB52CAB283D00EADEF7 /* MailToolsTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E5FBEBD2CAB283E00EADEF7 /* Build configuration list for PBXNativeTarget "MailToolsTests" */;
+			buildPhases = (
+				3E5FBEB22CAB283D00EADEF7 /* Sources */,
+				3E5FBEB32CAB283D00EADEF7 /* Frameworks */,
+				3E5FBEB42CAB283D00EADEF7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3E5FBEBC2CAB283E00EADEF7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3E5FBEB72CAB283D00EADEF7 /* MailToolsTests */,
+			);
+			name = MailToolsTests;
+			packageProductDependencies = (
+			);
+			productName = MailToolsTests;
+			productReference = 3E5FBEB62CAB283D00EADEF7 /* MailToolsTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -170,6 +320,12 @@
 						CreatedOnToolsVersion = 16.0;
 					};
 					3E5FBDE52CA7748D00EADEF7 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					3E5FBE982CAB273800EADEF7 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					3E5FBEB52CAB283D00EADEF7 = {
 						CreatedOnToolsVersion = 16.0;
 					};
 				};
@@ -194,6 +350,8 @@
 			targets = (
 				3E5FBDCF2CA7744100EADEF7 /* MailTools */,
 				3E5FBDE52CA7748D00EADEF7 /* MailToolsExtension */,
+				3E5FBE982CAB273800EADEF7 /* MailToolsCommon */,
+				3E5FBEB52CAB283D00EADEF7 /* MailToolsTests */,
 			);
 		};
 /* End PBXProject section */
@@ -207,6 +365,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3E5FBDE42CA7748D00EADEF7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5FBEB42CAB283D00EADEF7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -230,6 +395,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3E5FBE962CAB273800EADEF7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E5FBEB22CAB283D00EADEF7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -237,6 +416,29 @@
 			isa = PBXTargetDependency;
 			target = 3E5FBDE52CA7748D00EADEF7 /* MailToolsExtension */;
 			targetProxy = 3E5FBDF22CA7748D00EADEF7 /* PBXContainerItemProxy */;
+		};
+		3E5FBEA52CAB274800EADEF7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 3E5FBEA42CAB274800EADEF7 /* MimeParser */;
+		};
+		3E5FBEA72CAB274B00EADEF7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 3E5FBEA62CAB274B00EADEF7 /* SwiftSoup */;
+		};
+		3E5FBEA92CAB275400EADEF7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E5FBE982CAB273800EADEF7 /* MailToolsCommon */;
+			targetProxy = 3E5FBEA82CAB275400EADEF7 /* PBXContainerItemProxy */;
+		};
+		3E5FBEAB2CAB275F00EADEF7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E5FBE982CAB273800EADEF7 /* MailToolsCommon */;
+			targetProxy = 3E5FBEAA2CAB275F00EADEF7 /* PBXContainerItemProxy */;
+		};
+		3E5FBEBC2CAB283E00EADEF7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E5FBE982CAB273800EADEF7 /* MailToolsCommon */;
+			targetProxy = 3E5FBEBB2CAB283E00EADEF7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -379,7 +581,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -408,7 +610,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -435,7 +637,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools.MailToolsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -463,12 +665,72 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools.MailToolsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3E5FBE9F2CAB273800EADEF7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = MZ6WW388VL;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3E5FBEA02CAB273800EADEF7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = MZ6WW388VL;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3E5FBEBE2CAB283E00EADEF7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MZ6WW388VL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.BrokenTemplateReproduction.MailToolsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3E5FBEBF2CAB283E00EADEF7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MZ6WW388VL;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.BrokenTemplateReproduction.MailToolsTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -503,6 +765,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		3E5FBEA12CAB273800EADEF7 /* Build configuration list for PBXNativeTarget "MailToolsCommon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E5FBE9F2CAB273800EADEF7 /* Debug */,
+				3E5FBEA02CAB273800EADEF7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3E5FBEBD2CAB283E00EADEF7 /* Build configuration list for PBXNativeTarget "MailToolsTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3E5FBEBE2CAB283E00EADEF7 /* Debug */,
+				3E5FBEBF2CAB283E00EADEF7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -531,6 +811,26 @@
 			productName = MimeParser;
 		};
 		3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3E5FBE062CA9EB3A00EADEF7 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		3E5FBEA42CAB274800EADEF7 /* MimeParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3E5FBE012CA8B5BE00EADEF7 /* XCRemoteSwiftPackageReference "MimeParser" */;
+			productName = MimeParser;
+		};
+		3E5FBEA62CAB274B00EADEF7 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3E5FBE062CA9EB3A00EADEF7 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		3E5FBEAD2CAB27A200EADEF7 /* MimeParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3E5FBE012CA8B5BE00EADEF7 /* XCRemoteSwiftPackageReference "MimeParser" */;
+			productName = MimeParser;
+		};
+		3E5FBEAF2CAB27A200EADEF7 /* SwiftSoup */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3E5FBE062CA9EB3A00EADEF7 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;

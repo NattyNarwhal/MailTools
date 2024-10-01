@@ -6,8 +6,6 @@
 //
 
 import SwiftUI
-import MimeParser
-import MailKit
 
 struct ComposeSessionView: View {
     @ObservedObject var sessionHandler: ComposeSessionHandler
