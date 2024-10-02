@@ -61,7 +61,8 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
             let exceedingLines = parser.linesThatExceed(columns: maxColumnSize)
             // Only display the first line since the rest will probably be obvious from there
             if self.checkColumnSize, let exceedingLine = exceedingLines.first {
-                throw NSError(mailToolsMessage: "The line \"\(exceedingLine.text)\" is longer than \(maxColumnSize) characters.")
+                let truncatedLine = exceedingLine.text.truncate(to: maxColumnSize)
+                throw NSError(mailToolsMessage: "The line \"\(truncatedLine)\" is longer than \(maxColumnSize) characters.")
             }
             
             if self.checkTopPosting && parser.isTopPosting() {
