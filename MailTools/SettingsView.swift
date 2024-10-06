@@ -115,8 +115,20 @@ struct SettingsView: View {
     var body: some View {
         HSplitView {
             VStack(spacing: 0) {
-                List(rules, id: \.self, selection: $selected) {
-                    Text($0.target.description)
+                List(rules, id: \.self, selection: $selected) { rule in
+                    HStack {
+                        switch (rule.target) {
+                        case .domain(_):
+                            Image(systemName: "network")
+                            Text(rule.target.description)
+                        case .email(_):
+                            Image(systemName: "at")
+                            Text(rule.target.description)
+                        case .default:
+                            Text(rule.target.description)
+                                .bold()
+                        }
+                    }
                 }
                 HStack(spacing: 0) {
                     ListButton(imageName: "plus", helpText: "Add") {
