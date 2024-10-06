@@ -88,6 +88,7 @@ struct RuleEditor: View {
 // https://stackoverflow.com/a/59701237
 struct ListButton: View {
     var imageName: String
+    var helpText: String
     var action: () -> Void
 
     var body: some View {
@@ -95,6 +96,7 @@ struct ListButton: View {
             Image(systemName: imageName)
         }
         .buttonStyle(.borderless)
+        .help(helpText)
         .frame(width: 20, height: 20)
     }
 }
@@ -127,7 +129,7 @@ struct SettingsView: View {
                     Text($0.target.description)
                 }
                 HStack(spacing: 0) {
-                    ListButton(imageName: "plus") {
+                    ListButton(imageName: "plus", helpText: "Add") {
                         showAddPopover = true
                     }
                     .popover(isPresented: $showAddPopover) {
@@ -146,7 +148,7 @@ struct SettingsView: View {
                         .frame(width: 250)
                     }
                     Divider()
-                    ListButton(imageName: "minus") {
+                    ListButton(imageName: "minus", helpText: "Remove") {
                         rules.removeAll { $0 == selected }
                         selected = nil
                     }
