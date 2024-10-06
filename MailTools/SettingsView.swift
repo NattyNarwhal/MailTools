@@ -6,15 +6,24 @@
 //
 
 import SwiftUI
+import MailToolsCommon
 
 // This is a class because reference semantics seem easier to wrangle with
 class Rule: Identifiable, Codable, Hashable, Equatable, ObservableObject {
     static func == (lhs: Rule, rhs: Rule) -> Bool {
-        lhs.id == rhs.id
+        lhs.target == rhs.target &&
+        lhs.checkHtml == rhs.checkHtml &&
+        lhs.checkTopPosting == rhs.checkTopPosting &&
+        lhs.checkColumnSize == rhs.checkColumnSize &&
+        lhs.maxColumnSize == rhs.maxColumnSize
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(target)
+        hasher.combine(checkHtml)
+        hasher.combine(checkTopPosting)
+        hasher.combine(checkColumnSize)
+        hasher.combine(maxColumnSize)
     }
     
     enum RuleTarget: Codable, Hashable, CustomStringConvertible {
@@ -34,7 +43,6 @@ class Rule: Identifiable, Codable, Hashable, Equatable, ObservableObject {
         }
     }
     
-    var id = UUID()
     var target: RuleTarget
     
     var checkHtml: Bool
@@ -118,6 +126,28 @@ struct SettingsView: View {
         showAddPopover = false
     }
     
+    func saveConfigToDefaults() {
+        let encoder = JSONEncoder()
+        guard let defaults = UserDefaults(suiteName: "info.cmpct.MailTools.AppGroup") else {
+            return
+        }
+        if let data = try? encoder.encode(rules) {
+            print("writing")
+            defaults.set(data, forKey: "rules")
+        }
+    }
+    
+    func loadConfigFromDefaults() {
+        let decoder = JSONDecoder()
+        guard let defaults = UserDefaults(suiteName: "info.cmpct.MailTools.AppGroup") else {
+            return
+        }
+        if let rulesData = defaults.data(forKey: "rules"),
+           let newRules = try? decoder.decode([Rule].self, from: rulesData) {
+            self.rules = newRules
+        }
+    }
+    
     var body: some View {
         HSplitView {
             VStack(spacing: 0) {
@@ -189,6 +219,16 @@ struct SettingsView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .onAppear {
+            loadConfigFromDefaults()
+        }
+        .onChange(of: rules) { _ in
+            saveConfigToDefaults()
+        }
+        // TODO: Does not change when properties of selected
+        .onChange(of: selected) { _ in
+            saveConfigToDefaults()
         }
         .padding(14)
     }
