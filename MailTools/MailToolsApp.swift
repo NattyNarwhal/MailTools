@@ -29,6 +29,9 @@ struct MailToolsApp: App {
     var body: some Scene {
         // Ideally, we'd use Window, but that requires macOS 13, so instead we fake it with commands
         // Same deal with .windowResizability(.contentSize), can't use it on macOS 12...
+        Settings {
+            SettingsView()
+        }
         WindowGroup() {
             ContentView()
         }

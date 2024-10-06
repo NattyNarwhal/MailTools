@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E32B9E42CB1D9E500F66B83 /* MimeParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE022CA8B5BE00EADEF7 /* MimeParser */; };
+		3E32B9E52CB1D9E500F66B83 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */; };
 		3E5FBDF42CA7748D00EADEF7 /* MailToolsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3E5FBDE62CA7748D00EADEF7 /* MailToolsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3E5FBEAE2CAB27A200EADEF7 /* MimeParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBEAD2CAB27A200EADEF7 /* MimeParser */; };
 		3E5FBEB02CAB27A200EADEF7 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBEAF2CAB27A200EADEF7 /* SwiftSoup */; };
@@ -140,6 +142,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E32B9E52CB1D9E500F66B83 /* SwiftSoup in Frameworks */,
+				3E32B9E42CB1D9E500F66B83 /* MimeParser in Frameworks */,
 				3E5FBEB12CAB27A700EADEF7 /* libMailToolsCommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
