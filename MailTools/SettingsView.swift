@@ -112,6 +112,12 @@ struct SettingsView: View {
     @State var showAddPopover = false
     @State var newEmail = ""
     
+    func addRule(target: Rule.RuleTarget) {
+        rules.append(Rule(target: target, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72))
+        newEmail = ""
+        showAddPopover = false
+    }
+    
     var body: some View {
         HSplitView {
             VStack(spacing: 0) {
@@ -135,16 +141,21 @@ struct SettingsView: View {
                         showAddPopover = true
                     }
                     .popover(isPresented: $showAddPopover) {
-                        HStack {
+                        VStack {
                             TextField("Email", text: $newEmail)
-                            Button {
-                                rules.append(Rule(target: .email(newEmail), checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72))
-                                newEmail = ""
-                                showAddPopover = false
-                            } label: {
-                                Text("Add")
+                            HStack {
+                                Button {
+                                    addRule(target: .email(newEmail))
+                                } label: {
+                                    Text("Add Email")
+                                }
+                                .keyboardShortcut(.defaultAction)
+                                Button {
+                                    addRule(target: .domain(newEmail))
+                                } label: {
+                                    Text("Add Domain")
+                                }
                             }
-                            .keyboardShortcut(.defaultAction)
                         }
                         .padding(7)
                         .frame(width: 250)
