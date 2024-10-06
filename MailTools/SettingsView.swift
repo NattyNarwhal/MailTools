@@ -8,7 +8,7 @@
 import SwiftUI
 
 // This is a class because reference semantics seem easier to wrangle with
-class Rule: Identifiable, Codable, Hashable, Equatable {
+class Rule: Identifiable, Codable, Hashable, Equatable, ObservableObject {
     static func == (lhs: Rule, rhs: Rule) -> Bool {
         lhs.id == rhs.id
     }
@@ -52,7 +52,8 @@ class Rule: Identifiable, Codable, Hashable, Equatable {
 }
 
 struct RuleEditor: View {
-    @Binding var rule: Rule
+    // Bindings are a pain in the ass if you have to use if let...
+    @ObservedObject var rule: Rule
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -101,21 +102,10 @@ struct ListButton: View {
     }
 }
 
-struct RuleEditorWrapper: View {
-    @Binding var selected: Rule
-    
-    init (selected: Binding<Rule?>, defaultRule: Binding<Rule>) {
-        self._selected = Binding(selected) ?? defaultRule
-    }
-    
-    var body: some View {
-        RuleEditor(rule: $selected)
-    }
-}
-
 struct SettingsView: View {
-    @State var rules: [Rule] = []
-    @State var defaultRule: Rule = Rule(target: .default, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72)
+    @State var rules: [Rule] = [
+        Rule(target: .default, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72)
+    ]
     
     @State var selected: Rule?
     
@@ -152,6 +142,7 @@ struct SettingsView: View {
                         rules.removeAll { $0 == selected }
                         selected = nil
                     }
+                    .disabled(selected?.target == .default || selected == nil)
                     Divider()
                     Spacer()
                 }
@@ -161,9 +152,20 @@ struct SettingsView: View {
             }
             .border(Color(NSColor.gridColor), width: 1)
             VStack {
-                Text(selected?.target.description ?? "None selected")
-                RuleEditorWrapper(selected: $selected, defaultRule: $defaultRule)
+                if let selected = self.selected {
+                    RuleEditor(rule: selected)
+                } else {
+                    VStack(alignment: .center) {
+                        Text("No rule selected")
+                            .font(.title2)
+                            .foregroundStyle(.secondary)
+                        Text("Add an email to apply custom rules for, or edit the default rules.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
