@@ -20,6 +20,23 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     @Published var checkColumnSize = true
     @Published var maxColumnSize: Int = 72
     
+    // #MARK: - Rule Storage
+    
+    var rules: [MailRule] = {
+        let modelContainer = ModelContainer.sharedModelContainer
+
+        // we will filter by hand, but we have to sort by hand,
+        // because SwiftData can't sort on enums, even if they're Comparable
+        let fetchAll = FetchDescriptor<MailRule>()
+        
+        guard let rules = try? modelContainer.mainContext.fetch(fetchAll) else {
+            return []
+        }
+        
+        // most specific rules come first, default is last
+        return rules.sorted { $0.target > $1.target }
+    }()
+    
     // #MARK: - Applying Rules
     
     func apply(rule: MailRule) {
@@ -41,23 +58,10 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     }
     
     func applyRules(_ session: MEComposeSession) {
-        let modelContainer = ModelContainer.sharedModelContainer
-        
         let receipients = session.mailMessage.allRecipientAddresses.compactMap { $0.addressString }
         let receipientDomains = receipients.compactMap { String($0.split(separator: "@").last ?? "") }
         
-        // we will filter by hand, but we have to sort by hand,
-        // because SwiftData can't sort on enums, even if they're Comparable
-        let fetchAll = FetchDescriptor<MailRule>()
-        
-        guard let rules = try? modelContainer.mainContext.fetch(fetchAll) else {
-            return
-        }
-        
-        // most specific rules come first, default is last
-        let sortedRules = rules.sorted { $0.target > $1.target }
-        
-        for rule in sortedRules {
+        for rule in rules {
             logger.debug("Rule: \(rule.target, privacy: .public)")
             if shouldApply(rule: rule, receipients: receipients, domains: receipientDomains) {
                 apply(rule: rule)
@@ -85,6 +89,36 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
         let csv = ComposeSessionView(sessionHandler: self)
         extensionVC.view = NSHostingView(rootView: csv)
         return extensionVC
+    }
+    
+    // #MARK: - Annotation
+    
+    func annotateAddressesForSession(_ session: MEComposeSession) async -> [MEEmailAddress : MEAddressAnnotation] {
+        let rawReceipients = session.mailMessage.allRecipientAddresses
+        let receipients = rawReceipients.compactMap { $0.addressString }
+        let receipientDomains = receipients.compactMap { String($0.split(separator: "@").last ?? "") }
+        
+        // TODO: Should this be configurable?
+        var mapping: [MEEmailAddress: MEAddressAnnotation] = [:]
+        // XXX: Since MEAddressAnnotation constructors mention localized, makes sense to put rule in it?
+        for rule in rules {
+            if shouldApply(rule: rule, receipients: receipients, domains: receipientDomains) {
+                switch (rule.target) {
+                case .email(let email):
+                    if let email = rawReceipients.first(where: { $0.addressString == email }) {
+                        mapping[email] = .success(withLocalizedDescription: "MailTools rule matched: \(rule.target)")
+                    }
+                case .domain(let domain):
+                    if let email = rawReceipients.first(where: { $0.addressString?.hasSuffix(domain) ?? false }) {
+                        mapping[email] = .success(withLocalizedDescription: "MailTools rule matched: \(rule.target)")
+                    }
+                case .default:
+                    continue
+                }
+            }
+        }
+        
+        return mapping
     }
     
     // #MARK: - Allow Message Send
