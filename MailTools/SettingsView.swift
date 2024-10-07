@@ -151,6 +151,7 @@ struct SettingsView: View {
                         Text("Add an email to apply custom rules for, or edit the default rules.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
                 }
             }
