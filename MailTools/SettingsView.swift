@@ -63,7 +63,11 @@ struct SettingsView: View {
     @State var newEmail = ""
     
     func addRule(target: RuleTarget) {
-        let newRule = MailRule(target: target, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72)
+        let newRule = MailRule(target: target,
+                               checkHtml: selected?.checkHtml ?? true,
+                               checkTopPosting: selected?.checkTopPosting ?? true,
+                               checkColumnSize: selected?.checkColumnSize ?? true,
+                               maxColumnSize: selected?.maxColumnSize ?? 72)
         modelContext.insert(newRule)
         newEmail = ""
         showAddPopover = false
