@@ -30,13 +30,7 @@ struct ComposeSessionView: View {
                         .disabled(!sessionHandler.checkColumnSize)
                 }
             }
-            .modify {
-                if #available(macOS 13, *) {
-                    $0.formStyle(.grouped)
-                } else {
-                    $0.padding(7)
-                }
-            }
+            .formStyle(.grouped)
         }
     }
 }

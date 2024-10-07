@@ -8,20 +8,8 @@
 import SwiftUI
 import SwiftData
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
-    func applicationDidFinishLaunching(_ notification: Notification) {
-        NSWindow.allowsAutomaticWindowTabbing = false
-    }
-    
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
-    }
-}
-
 @main
 struct MailToolsApp: App {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
     static func initDatabase(_ context: ModelContext) throws {
         let fetchDesc = FetchDescriptor<MailRule>()
         guard try context.fetch(fetchDesc).isEmpty else {
@@ -49,24 +37,15 @@ struct MailToolsApp: App {
         }
     }()
     
-    // https://stackoverflow.com/a/74458617 - see comment about .windowResizability
-    init() {
-         UserDefaults.standard.set(false, forKey: "NSFullScreenMenuItemEverywhere")
-    }
-    
     var body: some Scene {
-        // Ideally, we'd use Window, but that requires macOS 13, so instead we fake it with commands
-        // Same deal with .windowResizability(.contentSize), can't use it on macOS 12...
         Settings {
             SettingsView()
         }
         .modelContainer(sharedModelContainer)
-        WindowGroup() {
+        Window("MailTools", id: "mainWindow") {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)
-        .commands {
-           CommandGroup(replacing: .newItem, addition: { })
-        }
+        .windowResizability(.contentSize)
     }
 }

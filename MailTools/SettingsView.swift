@@ -32,13 +32,7 @@ struct RuleEditor: View {
                         .disabled(!rule.checkColumnSize)
                 }
             }
-            .modify {
-                if #available(macOS 13, *) {
-                    $0.formStyle(.grouped)
-                } else {
-                    $0.padding(7)
-                }
-            }
+            .formStyle(.grouped)
         }
     }
 }
@@ -148,7 +142,7 @@ struct SettingsView: View {
                         Text("No rule selected")
                             .font(.title2)
                             .foregroundStyle(.secondary)
-                        Text("Add an email to apply custom rules for, or edit the default rules.")
+                        Text("Add an email or domain to apply custom rules for, or edit the default rules.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)

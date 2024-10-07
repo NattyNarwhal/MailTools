@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.openSettings) private var openSettings
+    
     var body: some View {
         VStack(alignment: .center) {
             Image(systemName: "mail.stack")
@@ -20,14 +22,11 @@ struct ContentView: View {
                 .padding(.top, 1)
                 .padding(.bottom, 0.25)
             
-            let settingsName = if #available(macOS 13, *) {
-                "Settings"
-            } else {
-                "Preferences"
-            }
-            Text("You'll need to enable the extension (if it isn't already) to get started.\r\n\r\n1. Open the Mail app.\r\n2. Go to \(settingsName). Find it in the application menu, or press Command+Comma. \r\n3. Go to the Extensions tab.\r\n4. Enable the MailTools extension.")
+            // TODO: Better way to store this text
+            Text("You'll need to enable the extension (if it isn't already) to get started.\r\n\r\n1. Open the Mail app.\r\n2. Go to Settings. Find it in the application menu, or press Command+Comma. \r\n3. Go to the Extensions tab.\r\n4. Enable the MailTools extension.\r\n\r\nYou can also configure MailTools to set what emails and domains it should be used for.")
                 .foregroundColor(.secondary)
                 .padding(.bottom, 1)
+                .fixedSize()
             
             Button {
                 // XXX: Can't open directly to the Settings window
@@ -38,20 +37,18 @@ struct ContentView: View {
             }
             .controlSize(.large)
             .font(.title3)
-            .modify {
-                if #available(macOS 13, *) {
-                    // XXX: For some reason, the tint isn't applying for the prominent button.
-                    $0.tint(.accentColor)
-                        .buttonStyle(.borderedProminent)
-                } else {
-                    $0
-                }
+            .tint(.accentColor)
+            .buttonStyle(.borderedProminent)
+            Button {
+                openSettings()
+            } label: {
+                Text("Open MailTools Settings")
+                    .frame(width: 250)
             }
+            .controlSize(.large)
+            .font(.title3)
         }
         .padding()
+        .fixedSize()
     }
-}
-
-#Preview {
-    ContentView()
 }
