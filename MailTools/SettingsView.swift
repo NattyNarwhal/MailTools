@@ -6,91 +6,11 @@
 //
 
 import SwiftUI
-import MailToolsCommon
+import SwiftData
 
-// This is a class because reference semantics seem easier to wrangle with
-// TODO: Replace with @Observable
-// TODO: Probably use SwiftData instead, it'd handle lifecycle automatically
-class Rule: Identifiable, Codable, Hashable, Equatable, ObservableObject {
-    static func == (lhs: Rule, rhs: Rule) -> Bool {
-        lhs.target == rhs.target &&
-        lhs.checkHtml == rhs.checkHtml &&
-        lhs.checkTopPosting == rhs.checkTopPosting &&
-        lhs.checkColumnSize == rhs.checkColumnSize &&
-        lhs.maxColumnSize == rhs.maxColumnSize
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(target)
-        hasher.combine(checkHtml)
-        hasher.combine(checkTopPosting)
-        hasher.combine(checkColumnSize)
-        hasher.combine(maxColumnSize)
-    }
-    
-    enum RuleTarget: Codable, Hashable, CustomStringConvertible {
-        case `default`
-        case email(String)
-        case domain(String)
-        
-        var description: String {
-            switch (self) {
-            case .default:
-                "Default"
-            case .domain(let domain):
-                "*@\(domain)"
-            case .email(let email):
-                email
-            }
-        }
-    }
-    
-    var target: RuleTarget
-    
-    // At least checkColumnSize needs this for the .disabled to update
-    @Published var checkHtml: Bool
-    @Published var checkTopPosting: Bool
-    @Published var checkColumnSize: Bool
-    @Published var maxColumnSize: Int
-    
-    init(target: RuleTarget, checkHtml: Bool, checkTopPosting: Bool, checkColumnSize: Bool, maxColumnSize: Int) {
-        self.target = target
-        self.checkHtml = checkHtml
-        self.checkTopPosting = checkTopPosting
-        self.checkColumnSize = checkColumnSize
-        self.maxColumnSize = maxColumnSize
-    }
-    
-    enum CodingKeys: CodingKey {
-        case target
-        case checkHtml
-        case checkTopPosting
-        case checkColumnSize
-        case maxColumnSize
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.target = try container.decode(RuleTarget.self, forKey: .target)
-        self.checkHtml = try container.decode(Bool.self, forKey: .checkHtml)
-        self.checkTopPosting = try container.decode(Bool.self, forKey: .checkTopPosting)
-        self.checkColumnSize = try container.decode(Bool.self, forKey: .checkColumnSize)
-        self.maxColumnSize = try container.decode(Int.self, forKey: .maxColumnSize)
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(target, forKey: .target)
-        try container.encode(checkHtml, forKey: .checkHtml)
-        try container.encode(checkTopPosting, forKey: .checkTopPosting)
-        try container.encode(checkColumnSize, forKey: .checkColumnSize)
-        try container.encode(maxColumnSize, forKey: .maxColumnSize)
-    }
-}
-
+// TODO: This should be shared-ish with the app extension?
 struct RuleEditor: View {
-    // Bindings are a pain in the ass if you have to use if let...
-    @ObservedObject var rule: Rule
+    @Bindable var rule: MailRule
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -139,61 +59,33 @@ struct ListButton: View {
     }
 }
 
-class SettingsState: ObservableObject {
-    @Published var rules: [Rule]
-    
-    let decoder = JSONDecoder()
-    let encoder = JSONEncoder()
-    
-    let defaults: UserDefaults!
-    
-    init() {
-        self.defaults = UserDefaults(suiteName: "info.cmpct.MailTools.AppGroup")
-        
-        self.rules = [
-            Rule(target: .default, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72)
-        ]
-        
-        loadConfigFromDefaults()
-    }
-    
-    func saveConfigToDefaults() {
-        if let data = try? encoder.encode(rules) {
-            print("writing")
-            defaults.set(data, forKey: "rules")
-        }
-    }
-    
-    func loadConfigFromDefaults() {
-        if let rulesData = defaults.data(forKey: "rules"),
-           let newRules = try? decoder.decode([Rule].self, from: rulesData) {
-            self.rules = newRules
-        }
-    }
-}
-
 struct SettingsView: View {
-    // used to determine if we lose focus/close, ok way to persist for now
-    @Environment(\.controlActiveState) private var controlActiveState
+    @Environment(\.modelContext) private var modelContext
+    @Query private var rules: [MailRule]
     
-    @StateObject var state = SettingsState()
-    
-    @State var selected: Rule?
+    @State var selected: MailRule?
     
     @State var showAddPopover = false
     @State var newEmail = ""
     
-    func addRule(target: Rule.RuleTarget) {
-        let newRule = Rule(target: target, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72)
-        state.rules.append(newRule)
+    func addRule(target: RuleTarget) {
+        let newRule = MailRule(target: target, checkHtml: true, checkTopPosting: true, checkColumnSize: true, maxColumnSize: 72)
+        modelContext.insert(newRule)
         newEmail = ""
         showAddPopover = false
+    }
+    
+    func deleteSelectedRule() {
+        if let selected = self.selected, selected.target != .default {
+            modelContext.delete(selected)
+        }
+        selected = nil
     }
     
     var body: some View {
         HSplitView {
             VStack(spacing: 0) {
-                List(state.rules, id: \.self, selection: $selected) { rule in
+                List(rules, id: \.self, selection: $selected) { rule in
                     HStack {
                         switch (rule.target) {
                         case .domain(_):
@@ -207,6 +99,9 @@ struct SettingsView: View {
                                 .bold()
                         }
                     }
+                }
+                .onDeleteCommand {
+                    deleteSelectedRule()
                 }
                 HStack(spacing: 0) {
                     ListButton(imageName: "plus", helpText: "Add") {
@@ -234,8 +129,7 @@ struct SettingsView: View {
                     }
                     Divider()
                     ListButton(imageName: "minus", helpText: "Remove") {
-                        state.rules.removeAll { $0 == selected }
-                        selected = nil
+                        deleteSelectedRule()
                     }
                     .disabled(selected?.target == .default || selected == nil)
                     Divider()
@@ -261,11 +155,6 @@ struct SettingsView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        // when the window focus changes/gets closed
-        .onChange(of: controlActiveState) { _ in
-            print("Active state")
-            state.saveConfigToDefaults()
         }
         .padding(14)
     }
