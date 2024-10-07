@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-enum RuleTarget: Codable, Hashable, CustomStringConvertible {
+enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
     case `default`
     case email(String)
     case domain(String)
@@ -22,6 +22,22 @@ enum RuleTarget: Codable, Hashable, CustomStringConvertible {
         case .email(let email):
             email
         }
+    }
+    
+    private var sortOrder: Int {
+        // least to most specific
+        switch (self) {
+        case .default:
+            0
+        case .domain(_):
+            1
+        case .email(_):
+            2
+        }
+    }
+    
+    static func <(lhs: RuleTarget, rhs: RuleTarget) -> Bool {
+        lhs.sortOrder < rhs.sortOrder
     }
 }
 

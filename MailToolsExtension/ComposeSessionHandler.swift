@@ -7,6 +7,7 @@
 
 import MailKit
 import SwiftUI
+import SwiftData
 import os
 
 import MailToolsCommon // MailParser, NSError+MailTools
@@ -18,9 +19,59 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     @Published var checkTopPosting = true
     @Published var checkColumnSize = true
     @Published var maxColumnSize: Int = 72
-
+    
+    // #MARK: - Applying Rules
+    
+    func apply(rule: MailRule) {
+        self.checkHtml = rule.checkHtml
+        self.checkTopPosting = rule.checkTopPosting
+        self.checkColumnSize = rule.checkColumnSize
+        self.maxColumnSize = rule.maxColumnSize
+    }
+    
+    func shouldApply(rule: MailRule, receipients: [String], domains: [String]) -> Bool {
+        switch (rule.target) {
+        case .email(let email):
+            return receipients.contains(email)
+        case .domain(let domain):
+            return domains.contains(domain)
+        case .default:
+            return true
+        }
+    }
+    
+    func applyRules(_ session: MEComposeSession) {
+        let modelContainer = ModelContainer.sharedModelContainer
+        
+        let receipients = session.mailMessage.allRecipientAddresses.compactMap { $0.addressString }
+        let receipientDomains = receipients.compactMap { String($0.split(separator: "@").last ?? "") }
+        
+        // we will filter by hand, but we have to sort by hand,
+        // because SwiftData can't sort on enums, even if they're Comparable
+        let fetchAll = FetchDescriptor<MailRule>()
+        
+        guard let rules = try? modelContainer.mainContext.fetch(fetchAll) else {
+            return
+        }
+        
+        // most specific rules come first, default is last
+        let sortedRules = rules.sorted { $0.target > $1.target }
+        
+        for rule in sortedRules {
+            logger.debug("Rule: \(rule.target, privacy: .public)")
+            if shouldApply(rule: rule, receipients: receipients, domains: receipientDomains) {
+                apply(rule: rule)
+                logger.debug("Applied rule: \(rule.target, privacy: .public)")
+                break
+            }
+        }
+    }
+    
+    // #MARK: - Session Lifetime
+    
     func mailComposeSessionDidBegin(_ session: MEComposeSession) {
         logger.debug("Start session")
+        applyRules(session)
     }
     
     func mailComposeSessionDidEnd(_ session: MEComposeSession) {
@@ -35,6 +86,8 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
         extensionVC.view = NSHostingView(rootView: csv)
         return extensionVC
     }
+    
+    // #MARK: - Allow Message Send
     
     // This *MUST* return an NSError due to XPC only recognizing real NSErrors, not things that implement the protocol!
     func allowMessageSendForSession(_ session: MEComposeSession, completion: @escaping (Error?) -> Void) {
