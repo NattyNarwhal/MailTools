@@ -15,10 +15,14 @@ import MailToolsCommon // MailParser, NSError+MailTools
 fileprivate let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "ComposeSessionHandler")
 
 class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject {
-    @Published var checkHtml = true
-    @Published var checkTopPosting = true
-    @Published var checkColumnSize = true
-    @Published var maxColumnSize: Int = 72
+    @Published var overrideRules = false
+    
+    var customRule: MailRule!
+    @Published var appliedRule: MailRule?
+    
+    var selectedRule: MailRule {
+        overrideRules ? customRule : (appliedRule ?? customRule)
+    }
     
     // #MARK: - Rule Storage
     
@@ -39,11 +43,14 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     
     // #MARK: - Applying Rules
     
+    /// Updates the custom rule to have the same settings as the applied rule.
+    ///
+    /// This is guarded at the callsite in applyRules not to trigger if
     func apply(rule: MailRule) {
-        self.checkHtml = rule.checkHtml
-        self.checkTopPosting = rule.checkTopPosting
-        self.checkColumnSize = rule.checkColumnSize
-        self.maxColumnSize = rule.maxColumnSize
+        self.customRule.checkHtml = rule.checkHtml
+        self.customRule.checkTopPosting = rule.checkTopPosting
+        self.customRule.checkColumnSize = rule.checkColumnSize
+        self.customRule.maxColumnSize = rule.maxColumnSize
     }
     
     func shouldApply(rule: MailRule, receipients: [String], domains: [String]) -> Bool {
@@ -52,12 +59,17 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
             return receipients.contains(email)
         case .domain(let domain):
             return domains.contains(domain)
-        case .default:
+        case .default, .custom:
             return true
         }
     }
     
     func applyRules(_ session: MEComposeSession) {
+        // If the user wants to override rules, don't change the user's rules
+        guard !self.overrideRules else {
+            return
+        }
+        
         let receipients = session.mailMessage.allRecipientAddresses.compactMap { $0.addressString }
         let receipientDomains = receipients.compactMap { String($0.split(separator: "@").last ?? "") }
         
@@ -65,6 +77,7 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
             logger.debug("Rule: \(rule.target, privacy: .public)")
             if shouldApply(rule: rule, receipients: receipients, domains: receipientDomains) {
                 apply(rule: rule)
+                self.appliedRule = rule
                 logger.debug("Applied rule: \(rule.target, privacy: .public)")
                 break
             }
@@ -75,6 +88,14 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     
     func mailComposeSessionDidBegin(_ session: MEComposeSession) {
         logger.debug("Start session")
+        
+        // this needs a container to be made, but we don't need to persist it
+        self.customRule = MailRule(target: .custom,
+                                   checkHtml: true,
+                                   checkTopPosting: true,
+                                   checkColumnSize: true,
+                                   maxColumnSize: 72)
+        
         applyRules(session)
     }
     
@@ -112,11 +133,14 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
                     if let email = rawReceipients.first(where: { $0.addressString?.hasSuffix(domain) ?? false }) {
                         mapping[email] = .success(withLocalizedDescription: "MailTools rule matched: \(rule.target)")
                     }
-                case .default:
+                case .default, .custom:
                     continue
                 }
             }
         }
+        
+        // update rules when receipient list is appended
+        applyRules(session)
         
         return mapping
     }
@@ -141,18 +165,18 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
             parser.printLines()
 #endif
             
-            if self.checkHtml && !parser.isPlainText() {
+            if self.selectedRule.checkHtml && !parser.isPlainText() {
                 throw NSError(mailToolsMessage: "The email should be plain text. Go to Format -> Make Plain Text to make this email no longer HTML.")
             }
             
-            let exceedingLines = parser.linesThatExceed(columns: maxColumnSize)
+            let exceedingLines = parser.linesThatExceed(columns: self.selectedRule.maxColumnSize)
             // Only display the first line since the rest will probably be obvious from there
-            if self.checkColumnSize, let exceedingLine = exceedingLines.first {
-                let truncatedLine = exceedingLine.text.truncate(to: maxColumnSize)
-                throw NSError(mailToolsMessage: "The line \"\(truncatedLine)\" is longer than \(maxColumnSize) characters.")
+            if self.selectedRule.checkColumnSize, let exceedingLine = exceedingLines.first {
+                let truncatedLine = exceedingLine.text.truncate(to: self.selectedRule.maxColumnSize)
+                throw NSError(mailToolsMessage: "The line \"\(truncatedLine)\" is longer than \(self.selectedRule.maxColumnSize) characters.")
             }
             
-            if self.checkTopPosting && parser.isTopPosting() {
+            if self.selectedRule.checkTopPosting && parser.isTopPosting() {
                 throw NSError(mailToolsMessage: "The reply is written at the beginning of the email. Move your reply inline or below the quote.")
             }
             

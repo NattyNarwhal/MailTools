@@ -12,25 +12,34 @@ struct ComposeSessionView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Form {
-                Section {
-                    Toggle(isOn: $sessionHandler.checkHtml) {
-                        Text("Check if email isn't plain text")
+            // XXX: Is it a good idea to only show the override if not using defaults?
+            // Does it make sense to show the read-only default options with default?
+            if sessionHandler.appliedRule?.target != .default {
+                // use a form since it's easier than changing the toggle width
+                Form {
+                    Toggle(isOn: $sessionHandler.overrideRules) {
+                        Text("Override applied rules for this email")
+                        if sessionHandler.overrideRules {
+                            Text("The settings below are for this email only.")
+                        } else if let appliedRule = sessionHandler.appliedRule {
+                            Text("The settings below come from the rule for \"\(appliedRule.target)\". To change the settings below, change the rule from MailTools settings, or override the settings for this email.")
+                        }
                     }
-                    Toggle(isOn: $sessionHandler.checkTopPosting) {
-                        Text("Check if replies are top posting")
-                    }
+                    .toggleStyle(.switch)
+                    .controlSize(.extraLarge)
                 }
-                Section {
-                    // TODO: Language here sucks
-                    Toggle(isOn: $sessionHandler.checkColumnSize) {
-                        Text("Check if line exceeds column limit")
-                    }
-                    TextField("Lines can't exceed column", value: $sessionHandler.maxColumnSize, format: .number)
-                        .disabled(!sessionHandler.checkColumnSize)
-                }
+                .formStyle(.grouped)
+                Divider()
             }
-            .formStyle(.grouped)
+            if sessionHandler.overrideRules || sessionHandler.appliedRule?.target == .default {
+                RuleEditor(rule: sessionHandler.customRule)
+            } else if let appliedRule = sessionHandler.appliedRule {
+                RuleEditor(rule: appliedRule)
+                    .disabled(true)
+            }
+            // no else, we're in trouble is there is no rule
         }
+        .frame(width: 400)
+        .fixedSize()
     }
 }

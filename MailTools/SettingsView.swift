@@ -8,35 +8,6 @@
 import SwiftUI
 import SwiftData
 
-// TODO: This should be shared-ish with the app extension?
-struct RuleEditor: View {
-    @Bindable var rule: MailRule
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Form {
-                Section {
-                    Toggle(isOn: $rule.checkHtml) {
-                        Text("Check if email isn't plain text")
-                    }
-                    Toggle(isOn: $rule.checkTopPosting) {
-                        Text("Check if replies are top posting")
-                    }
-                }
-                Section {
-                    // TODO: Language here sucks
-                    Toggle(isOn: $rule.checkColumnSize) {
-                        Text("Check if line exceeds column limit")
-                    }
-                    TextField("Lines can't exceed column", value: $rule.maxColumnSize, format: .number)
-                        .disabled(!rule.checkColumnSize)
-                }
-            }
-            .formStyle(.grouped)
-        }
-    }
-}
-
 // https://stackoverflow.com/a/59701237
 struct ListButton: View {
     var imageName: String
@@ -92,7 +63,7 @@ struct SettingsView: View {
                         case .email(_):
                             Image(systemName: "at")
                             Text(rule.target.description)
-                        case .default:
+                        case .default, .custom:
                             Text(rule.target.description)
                                 .bold()
                         }

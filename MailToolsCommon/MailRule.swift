@@ -10,6 +10,7 @@ import SwiftData
 
 enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
     case `default`
+    case custom // used only transiently
     case email(String)
     case domain(String)
     
@@ -17,6 +18,8 @@ enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
         switch (self) {
         case .default:
             "Default"
+        case .custom:
+            "Custom"
         case .domain(let domain):
             "*@\(domain)"
         case .email(let email):
@@ -27,7 +30,7 @@ enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
     private var sortOrder: Int {
         // least to most specific
         switch (self) {
-        case .default:
+        case .default, .custom:
             0
         case .domain(_):
             1

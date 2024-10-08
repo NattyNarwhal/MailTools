@@ -81,6 +81,7 @@
 			membershipExceptions = (
 				MailRule.swift,
 				"ModelContainer+MailTools.swift",
+				RuleEditor.swift,
 			);
 			target = 3E5FBDCF2CA7744100EADEF7 /* MailTools */;
 		};
@@ -89,6 +90,7 @@
 			membershipExceptions = (
 				MailRule.swift,
 				"ModelContainer+MailTools.swift",
+				RuleEditor.swift,
 			);
 			target = 3E5FBDE52CA7748D00EADEF7 /* MailToolsExtension */;
 		};
@@ -97,6 +99,7 @@
 			membershipExceptions = (
 				MailRule.swift,
 				"ModelContainer+MailTools.swift",
+				RuleEditor.swift,
 			);
 			target = 3E5FBE982CAB273800EADEF7 /* MailToolsCommon */;
 		};
