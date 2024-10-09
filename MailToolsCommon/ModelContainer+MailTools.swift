@@ -8,8 +8,8 @@
 import Foundation
 import SwiftData
 
-extension ModelContainer {
-    static func initDatabase(_ context: ModelContext) throws {
+public extension ModelContainer {
+    private static func initDatabase(_ context: ModelContext) throws {
         let fetchDesc = FetchDescriptor<MailRule>()
         guard try context.fetch(fetchDesc).isEmpty else {
             // we already have context

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import MailToolsCommon
 
 // https://stackoverflow.com/a/59701237
 struct ListButton: View {

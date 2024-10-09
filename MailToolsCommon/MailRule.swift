@@ -8,13 +8,13 @@
 import Foundation
 import SwiftData
 
-enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
+public enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
     case `default`
     case custom // used only transiently
     case email(String)
     case domain(String)
     
-    var description: String {
+    public var description: String {
         switch (self) {
         case .default:
             "Default"
@@ -39,20 +39,20 @@ enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
         }
     }
     
-    static func <(lhs: RuleTarget, rhs: RuleTarget) -> Bool {
+    public static func <(lhs: RuleTarget, rhs: RuleTarget) -> Bool {
         lhs.sortOrder < rhs.sortOrder
     }
 }
 
-@Model final class MailRule {
-    var target: RuleTarget
+@Model public final class MailRule {
+    public var target: RuleTarget
     
-    var checkHtml: Bool
-    var checkTopPosting: Bool
-    var checkColumnSize: Bool
-    var maxColumnSize: Int
+    public var checkHtml: Bool
+    public var checkTopPosting: Bool
+    public var checkColumnSize: Bool
+    public var maxColumnSize: Int
     
-    init(target: RuleTarget, checkHtml: Bool, checkTopPosting: Bool, checkColumnSize: Bool, maxColumnSize: Int) {
+    public init(target: RuleTarget, checkHtml: Bool, checkTopPosting: Bool, checkColumnSize: Bool, maxColumnSize: Int) {
         self.target = target
         self.checkHtml = checkHtml
         self.checkTopPosting = checkTopPosting
@@ -60,7 +60,7 @@ enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
         self.maxColumnSize = maxColumnSize
     }
     
-    convenience init() {
+    public convenience init() {
         self.init(target: .default, checkHtml: false, checkTopPosting: false, checkColumnSize: false, maxColumnSize: 72)
     }
 }

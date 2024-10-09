@@ -7,10 +7,14 @@
 
 import SwiftUI
 
-struct RuleEditor: View {
-    @Bindable var rule: MailRule
+public struct RuleEditor: View {
+    @Bindable public var rule: MailRule
     
-    var body: some View {
+    public init(rule: MailRule) {
+        self.rule = rule
+    }
+    
+    public var body: some View {
         VStack(alignment: .leading) {
             Form {
                 Section {

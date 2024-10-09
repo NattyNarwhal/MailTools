@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MailToolsCommon
 
 struct ComposeSessionView: View {
     @ObservedObject var sessionHandler: ComposeSessionHandler
