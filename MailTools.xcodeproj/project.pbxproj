@@ -103,11 +103,21 @@
 			);
 			target = 3E5FBE982CAB273800EADEF7 /* MailToolsCommon */;
 		};
+		3E6865C42CB4B7F90099A5D9 /* Exceptions for "MailTools" folder in "MailTools" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3E5FBDCF2CA7744100EADEF7 /* MailTools */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3E5FBDD22CA7744100EADEF7 /* MailTools */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3E6865C42CB4B7F90099A5D9 /* Exceptions for "MailTools" folder in "MailTools" target */,
+			);
 			path = MailTools;
 			sourceTree = "<group>";
 		};
@@ -585,6 +595,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MailTools/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -614,6 +625,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MailTools/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (

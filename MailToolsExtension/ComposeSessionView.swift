@@ -27,6 +27,16 @@ struct ComposeSessionView: View {
                     }
                     .toggleStyle(.switch)
                     .controlSize(.extraLarge)
+                    HStack {
+                        Spacer()
+                        Button {
+                            if let url = URL(string: "x-mailtools://settings") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        } label: {
+                            Text("Open MailTools Settings")
+                        }
+                    }
                 }
                 .formStyle(.grouped)
                 Divider()

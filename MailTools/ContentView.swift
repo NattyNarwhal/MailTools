@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.openSettings) private var openSettings
+    @Environment(\.openWindow) var openWindow
     
     var body: some View {
         VStack(alignment: .center) {
@@ -50,5 +51,14 @@ struct ContentView: View {
         }
         .padding()
         .fixedSize()
+        .onOpenURL { url in
+            if url.host == "settings" {
+                // We have to apply a small delay so the window is brought to front
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    openSettings()
+                }
+                // TODO: This doesn't bring the window to the front WH.
+            }
+        }
     }
 }
