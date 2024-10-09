@@ -12,11 +12,11 @@ struct ComposeSessionView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            // XXX: Is it a good idea to only show the override if not using defaults?
-            // Does it make sense to show the read-only default options with default?
-            if sessionHandler.appliedRule?.target != .default {
-                // use a form since it's easier than changing the toggle width
-                Form {
+            // use a form since it's easier than changing the toggle width
+            Form {
+                // Does it make sense to show the read-only default options with default?
+                if sessionHandler.appliedRule?.target != .default {
+                    // XXX: Is it a good idea to only show the override if not using defaults?
                     Toggle(isOn: $sessionHandler.overrideRules) {
                         Text("Override applied rules for this email")
                         if sessionHandler.overrideRules {
@@ -27,20 +27,24 @@ struct ComposeSessionView: View {
                     }
                     .toggleStyle(.switch)
                     .controlSize(.extraLarge)
-                    HStack {
-                        Spacer()
-                        Button {
-                            if let url = URL(string: "x-mailtools://settings") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        } label: {
-                            Text("Open MailTools Settings")
+                } else {
+                    Text("No rules applied to this message. You can change the settings for this message specifically, add a receipient that rules apply to, or add a rule that will apply to this message.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                HStack {
+                    Spacer()
+                    Button {
+                        if let url = URL(string: "x-mailtools://settings") {
+                            NSWorkspace.shared.open(url)
                         }
+                    } label: {
+                        Text("Open MailTools Settings")
                     }
                 }
-                .formStyle(.grouped)
-                Divider()
             }
+            .formStyle(.grouped)
+            Divider()
             if sessionHandler.overrideRules || sessionHandler.appliedRule?.target == .default {
                 RuleEditor(rule: sessionHandler.customRule)
             } else if let appliedRule = sessionHandler.appliedRule {
