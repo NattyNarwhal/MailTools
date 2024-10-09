@@ -32,8 +32,18 @@ struct SettingsView: View {
     
     @State var showAddPopover = false
     @State var newEmail = ""
+    @State var newRuleError: String? = nil
     
     func addRule(target: RuleTarget) {
+        // email and domain validation hard but try to do some basic stuff
+        switch (target) {
+        case .email(let email) where !email.contains("@"):
+            newRuleError = "The email address needs to contain an at sign."
+            return
+        default:
+            newRuleError = nil
+        }
+        
         let newRule = MailRule(target: target,
                                checkHtml: selected?.checkHtml ?? true,
                                checkTopPosting: selected?.checkTopPosting ?? true,
@@ -79,6 +89,11 @@ struct SettingsView: View {
                     .popover(isPresented: $showAddPopover) {
                         VStack {
                             TextField("Email", text: $newEmail)
+                                .frame(width: 250)
+                            if let newRuleError = self.newRuleError {
+                                Text(newRuleError)
+                                    .font(.caption2)
+                            }
                             HStack {
                                 Button {
                                     addRule(target: .email(newEmail))
@@ -94,7 +109,6 @@ struct SettingsView: View {
                             }
                         }
                         .padding(7)
-                        .frame(width: 250)
                     }
                     Divider()
                     ListButton(imageName: "minus", helpText: "Remove") {
