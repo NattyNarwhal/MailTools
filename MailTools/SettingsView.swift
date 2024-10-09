@@ -37,6 +37,11 @@ struct SettingsView: View {
     
     func addRule(target: RuleTarget) {
         // email and domain validation hard but try to do some basic stuff
+        guard !newEmail.isEmpty else {
+            newRuleError = "This field can't be empty."
+            return
+        }
+        
         switch (target) {
         case .email(let email) where !email.contains("@"):
             newRuleError = "The email address needs to contain an at sign."
