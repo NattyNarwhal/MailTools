@@ -104,7 +104,10 @@ public class MailParser {
         // If the user deletes the top bit, it might break the first line out of the <blockquote>
         // and into the main body, but it tends to be a single line, and after the quote (then reply).
         // TODO: More advanced heuristics
-        return ((try? self.htmlBody.getElementById("lineBreakAtBeginningOfMessage") != nil) != nil)
+        if let _ = try? self.htmlBody.getElementById("lineBreakAtBeginningOfMessage") {
+            return true
+        }
+        return false
     }
     
     // #MARK: - Line Gathering
