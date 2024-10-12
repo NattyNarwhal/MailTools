@@ -21,7 +21,12 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     @Published var appliedRule: MailRule?
     
     var selectedRule: MailRule {
-        overrideRules ? customRule : (appliedRule ?? customRule)
+        // Match our view's perspective; the default rule is copied into custom on startup.
+        if overrideRules || appliedRule?.target == .default {
+            return customRule
+        } else {
+            return appliedRule ?? customRule
+        }
     }
     
     // #MARK: - Rule Storage
