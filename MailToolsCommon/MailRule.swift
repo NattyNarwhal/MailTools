@@ -49,18 +49,36 @@ public enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
     
     public var checkHtml: Bool
     public var checkTopPosting: Bool
+    
     public var checkColumnSize: Bool
     public var maxColumnSize: Int
     
-    public init(target: RuleTarget, checkHtml: Bool, checkTopPosting: Bool, checkColumnSize: Bool, maxColumnSize: Int) {
+    // easier to set defaults for attributes to simplify migration (and make SwiftData happier)
+    public var checkFromAddress: Bool = false
+    // non-empty and not a String? to make SwiftUI use easier, and avoid clobbering this if set to false
+    public var desiredFromAddress: String = ""
+    
+    public init(target: RuleTarget, checkHtml: Bool, checkTopPosting: Bool, maxColumnSize: Int?, desiredFromAddress: String?) {
         self.target = target
         self.checkHtml = checkHtml
         self.checkTopPosting = checkTopPosting
-        self.checkColumnSize = checkColumnSize
-        self.maxColumnSize = maxColumnSize
+        if let maxColumnSize = maxColumnSize {
+            self.checkColumnSize = true
+            self.maxColumnSize = maxColumnSize
+        } else {
+            self.checkColumnSize = false
+            self.maxColumnSize = 0
+        }
+        if let desiredFromAddress = desiredFromAddress {
+            self.checkFromAddress = true
+            self.desiredFromAddress = desiredFromAddress
+        } else {
+            self.checkFromAddress = false
+            self.desiredFromAddress = ""
+        }
     }
     
     public convenience init() {
-        self.init(target: .default, checkHtml: false, checkTopPosting: false, checkColumnSize: false, maxColumnSize: 72)
+        self.init(target: .default, checkHtml: false, checkTopPosting: false, maxColumnSize: 72, desiredFromAddress: nil)
     }
 }

@@ -56,6 +56,8 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
         self.customRule.checkTopPosting = rule.checkTopPosting
         self.customRule.checkColumnSize = rule.checkColumnSize
         self.customRule.maxColumnSize = rule.maxColumnSize
+        self.customRule.checkFromAddress = rule.checkFromAddress
+        self.customRule.desiredFromAddress = rule.desiredFromAddress
     }
     
     func shouldApply(rule: MailRule, receipients: [String], domains: [String]) -> Bool {
@@ -98,8 +100,8 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
         self.customRule = MailRule(target: .custom,
                                    checkHtml: true,
                                    checkTopPosting: true,
-                                   checkColumnSize: true,
-                                   maxColumnSize: 72)
+                                   maxColumnSize: 72,
+                                   desiredFromAddress: nil)
         
         applyRules(session)
     }
@@ -183,6 +185,11 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
             
             if self.selectedRule.checkTopPosting && parser.isTopPosting() {
                 throw NSError(mailToolsMessage: "The reply is written at the beginning of the email. Move your reply inline or below the quote.")
+            }
+            
+            if let mailFromAddress = session.mailMessage.fromAddress.addressString,
+                self.selectedRule.checkFromAddress && mailFromAddress != self.selectedRule.desiredFromAddress {
+                throw NSError(mailToolsMessage: "The email isn't being sent from the right address. Change the email to be sent from \"\(self.selectedRule.desiredFromAddress)\" instead of \"\(mailFromAddress)\".")
             }
             
             throw NSError(mailToolsMessage: "Last chance...")

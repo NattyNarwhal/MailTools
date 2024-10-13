@@ -30,8 +30,17 @@ public struct RuleEditor: View {
                     Toggle(isOn: $rule.checkColumnSize) {
                         Text("Check if line exceeds column limit")
                     }
-                    TextField("Lines can't exceed column", value: $rule.maxColumnSize, format: .number)
-                        .disabled(!rule.checkColumnSize)
+                    if (rule.checkColumnSize) {
+                        TextField("Lines can't exceed column", value: $rule.maxColumnSize, format: .number)
+                    }
+                }
+                Section {
+                    Toggle(isOn: $rule.checkFromAddress) {
+                        Text("Check if email is sent from right address")
+                    }
+                    if (rule.checkFromAddress) {
+                        TextField("Email to be sent from", text: $rule.desiredFromAddress)
+                    }
                 }
             }
             .formStyle(.grouped)

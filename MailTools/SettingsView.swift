@@ -53,8 +53,8 @@ struct SettingsView: View {
         let newRule = MailRule(target: target,
                                checkHtml: selected?.checkHtml ?? true,
                                checkTopPosting: selected?.checkTopPosting ?? true,
-                               checkColumnSize: selected?.checkColumnSize ?? true,
-                               maxColumnSize: selected?.maxColumnSize ?? 72)
+                               maxColumnSize: selected?.maxColumnSize,
+                               desiredFromAddress: nil)
         modelContext.insert(newRule)
         newEmail = ""
         showAddPopover = false
