@@ -54,7 +54,7 @@ struct SettingsView: View {
                                checkHtml: selected?.checkHtml ?? true,
                                checkTopPosting: selected?.checkTopPosting ?? true,
                                maxColumnSize: selected?.maxColumnSize,
-                               desiredFromAddress: nil)
+                               desiredFromAddress: selected?.desiredFromAddress)
         modelContext.insert(newRule)
         newEmail = ""
         showAddPopover = false
