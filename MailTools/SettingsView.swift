@@ -141,6 +141,7 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
+                            .padding([.leading, .trailing], 7)
                     }
                 }
             }
