@@ -192,8 +192,10 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
                 throw NSError(mailToolsMessage: "The email isn't being sent from the right address. Change the email to be sent from \"\(self.selectedRule.desiredFromAddress)\" instead of \"\(mailFromAddress)\".", reason: .invalidHeaders)
             }
             
-            throw NSError(mailToolsMessage: "Last chance...")
-            //completion(nil)
+#if DEBUG
+            throw NSError(mailToolsMessage: "No errors were hit; send anyways?")
+#endif
+            completion(nil)
         }
         catch {
             logger.warning("\(error.localizedDescription, privacy: .public)")
