@@ -189,7 +189,7 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
             
             if let mailFromAddress = session.mailMessage.fromAddress.addressString,
                 self.selectedRule.checkFromAddress && mailFromAddress != self.selectedRule.desiredFromAddress {
-                throw NSError(mailToolsMessage: "The email isn't being sent from the right address. Change the email to be sent from \"\(self.selectedRule.desiredFromAddress)\" instead of \"\(mailFromAddress)\".")
+                throw NSError(mailToolsMessage: "The email isn't being sent from the right address. Change the email to be sent from \"\(self.selectedRule.desiredFromAddress)\" instead of \"\(mailFromAddress)\".", reason: .invalidHeaders)
             }
             
             throw NSError(mailToolsMessage: "Last chance...")

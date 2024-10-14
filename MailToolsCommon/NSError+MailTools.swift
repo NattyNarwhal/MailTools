@@ -6,10 +6,13 @@
 //
 
 import Foundation
+import MailKit
 
 extension NSError {
-    public convenience init(mailToolsMessage: String) {
+    public convenience init(mailToolsMessage: String, reason: MEComposeSessionError.Code = .invalidBody) {
         // failure/recovery are not used (XXX: Can we indicate severity?)
-        self.init(domain: Bundle.main.bundleIdentifier!, code: 1, userInfo: [NSLocalizedDescriptionKey: mailToolsMessage])
+        self.init(domain: MEComposeSessionError.errorDomain,
+                  code: reason.rawValue,
+                  userInfo: [NSLocalizedDescriptionKey: mailToolsMessage])
     }
 }
