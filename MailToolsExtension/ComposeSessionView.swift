@@ -15,24 +15,19 @@ struct ComposeSessionView: View {
         VStack(alignment: .leading) {
             // use a form since it's easier than changing the toggle width
             Form {
-                // Does it make sense to show the read-only default options with default?
-                if sessionHandler.appliedRule?.target != .default {
-                    // XXX: Is it a good idea to only show the override if not using defaults?
-                    Toggle(isOn: $sessionHandler.overrideRules) {
-                        Text("Override applied rules for this email")
-                        if sessionHandler.overrideRules {
-                            Text("The settings below are for this email only.")
-                        } else if let appliedRule = sessionHandler.appliedRule {
-                            Text("The settings below come from the rule for \"\(appliedRule.target)\". To change the settings below, change the rule from MailTools settings, or override the settings for this email.")
-                        }
+                // XXX: Is it a good idea to only show the override if not using defaults?
+                Toggle(isOn: $sessionHandler.overrideRules) {
+                    Text("Override applied rules for this email")
+                    if sessionHandler.overrideRules {
+                        Text("The settings below are for this email only.")
+                    } else if sessionHandler.appliedRule?.target == .default {
+                        Text("No rules applied to this message, so the defaults are being used. You can change the settings for this message specifically, add a receipient that rules apply to, or add a rule from MailTools settings.")
+                    } else if let appliedRule = sessionHandler.appliedRule {
+                        Text("The settings below come from the rule for \"\(appliedRule.target)\". You can change the settings for this message specifically, or change the rule from MailTools settings.")
                     }
-                    .toggleStyle(.switch)
-                    .controlSize(.extraLarge)
-                } else {
-                    Text("No rules applied to this message. You can change the settings for this message specifically, add a receipient that rules apply to, or add a rule that will apply to this message.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
                 }
+                .toggleStyle(.switch)
+                .controlSize(.extraLarge)
                 HStack {
                     Spacer()
                     Button {
@@ -46,7 +41,7 @@ struct ComposeSessionView: View {
             }
             .formStyle(.grouped)
             Divider()
-            if sessionHandler.overrideRules || sessionHandler.appliedRule?.target == .default {
+            if sessionHandler.overrideRules {
                 RuleEditor(rule: sessionHandler.customRule)
             } else if let appliedRule = sessionHandler.appliedRule {
                 RuleEditor(rule: appliedRule)
