@@ -155,52 +155,44 @@ class ComposeSessionHandler: NSObject, MEComposeSessionHandler, ObservableObject
     // #MARK: - Allow Message Send
     
     // This *MUST* return an NSError due to XPC only recognizing real NSErrors, not things that implement the protocol!
-    func allowMessageSendForSession(_ session: MEComposeSession, completion: @escaping (Error?) -> Void) {
+    func allowMessageSendForSession(_ session: MEComposeSession) async throws {
         logger.debug("Allow message send?")
         
         // TODO: Should we aggregate multiple issues?
-        
-        do {
-            let parser = try MailParser(session: session)
-            
+        let parser = try MailParser(session: session)
+
 #if DEBUG
-            print("-- MIME --")
-            print(parser.mimeMessage!)
-            print("-- HTML --")
-            print(parser.htmlDocument)
-            print("-- LINE IR -- ")
-            parser.printLines()
+        print("-- MIME --")
+        print(parser.mimeMessage!)
+        print("-- HTML --")
+        print(parser.htmlDocument)
+        print("-- LINE IR -- ")
+        parser.printLines()
 #endif
-            
-            if self.selectedRule.checkHtml && !parser.isPlainText() {
-                throw NSError(mailToolsMessage: "The email should be plain text. Go to Format -> Make Plain Text to make this email no longer HTML.")
-            }
-            
-            let exceedingLines = parser.linesThatExceed(columns: self.selectedRule.maxColumnSize)
-            // Only display the first line since the rest will probably be obvious from there
-            if self.selectedRule.checkColumnSize, let exceedingLine = exceedingLines.first {
-                let truncatedLine = exceedingLine.text.truncate(to: self.selectedRule.maxColumnSize)
-                throw NSError(mailToolsMessage: "The line \"\(truncatedLine)\" is longer than \(self.selectedRule.maxColumnSize) characters.")
-            }
-            
-            if self.selectedRule.checkTopPosting && parser.isTopPosting() {
-                throw NSError(mailToolsMessage: "The reply is written at the beginning of the email. Move your reply inline or below the quote.")
-            }
-            
-            if let mailFromAddress = session.mailMessage.fromAddress.addressString,
-                self.selectedRule.checkFromAddress && mailFromAddress != self.selectedRule.desiredFromAddress {
-                throw NSError(mailToolsMessage: "The email isn't being sent from the right address. Change the email to be sent from \"\(self.selectedRule.desiredFromAddress)\" instead of \"\(mailFromAddress)\".", reason: .invalidHeaders)
-            }
-            
+
+        if self.selectedRule.checkHtml && !parser.isPlainText() {
+            throw NSError(mailToolsMessage: "The email should be plain text. Go to Format -> Make Plain Text to make this email no longer HTML.")
+        }
+
+        let exceedingLines = parser.linesThatExceed(columns: self.selectedRule.maxColumnSize)
+        // Only display the first line since the rest will probably be obvious from there
+        if self.selectedRule.checkColumnSize, let exceedingLine = exceedingLines.first {
+            let truncatedLine = exceedingLine.text.truncate(to: self.selectedRule.maxColumnSize)
+            throw NSError(mailToolsMessage: "The line \"\(truncatedLine)\" is longer than \(self.selectedRule.maxColumnSize) characters.")
+        }
+
+        if self.selectedRule.checkTopPosting && parser.isTopPosting() {
+            throw NSError(mailToolsMessage: "The reply is written at the beginning of the email. Move your reply inline or below the quote.")
+        }
+
+        if let mailFromAddress = session.mailMessage.fromAddress.addressString,
+            self.selectedRule.checkFromAddress && mailFromAddress != self.selectedRule.desiredFromAddress {
+            throw NSError(mailToolsMessage: "The email isn't being sent from the right address. Change the email to be sent from \"\(self.selectedRule.desiredFromAddress)\" instead of \"\(mailFromAddress)\".", reason: .invalidHeaders)
+        }
+
 #if DEBUG
-            throw NSError(mailToolsMessage: "No errors were hit; send anyways?")
+        throw NSError(mailToolsMessage: "No errors were hit; send anyways?")
 #endif
-            completion(nil)
-        }
-        catch {
-            logger.warning("\(error.localizedDescription, privacy: .public)")
-            completion(error)
-        }
     }
 }
 
