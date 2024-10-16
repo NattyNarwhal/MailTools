@@ -13,6 +13,8 @@
 		3E5FBEB12CAB27A700EADEF7 /* libMailToolsCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */; };
 		3E5FBEBA2CAB283E00EADEF7 /* libMailToolsCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */; };
 		3E8BDF662CB64665008C91EE /* libMailToolsCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E5FBE992CAB273800EADEF7 /* libMailToolsCommon.a */; };
+		3EF00DFA2CC057110021FD32 /* MimeParser in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE022CA8B5BE00EADEF7 /* MimeParser */; };
+		3EF00DFB2CC057110021FD32 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 3E5FBE072CA9EB3A00EADEF7 /* SwiftSoup */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +129,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EF00DFB2CC057110021FD32 /* SwiftSoup in Frameworks */,
+				3EF00DFA2CC057110021FD32 /* MimeParser in Frameworks */,
 				3E5FBEB12CAB27A700EADEF7 /* libMailToolsCommon.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -570,7 +574,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -600,7 +604,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -627,7 +631,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools.MailToolsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -655,7 +659,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools.MailToolsExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -673,7 +677,7 @@
 				DEVELOPMENT_TEAM = MZ6WW388VL;
 				EXECUTABLE_PREFIX = lib;
 				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -688,7 +692,7 @@
 				DEVELOPMENT_TEAM = MZ6WW388VL;
 				EXECUTABLE_PREFIX = lib;
 				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -702,7 +706,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MZ6WW388VL;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools.MailToolsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -718,7 +722,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MZ6WW388VL;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = info.cmpct.MailTools.MailToolsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
