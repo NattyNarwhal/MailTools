@@ -56,7 +56,7 @@ struct SettingsView: View {
         let newRule = MailRule(target: target,
                                checkHtml: selected?.checkHtml ?? true,
                                checkTopPosting: selected?.checkTopPosting ?? true,
-                               maxColumnSize: selected?.maxColumnSize,
+                               maxColumnSize: selected?.maxColumnSize ?? 72,
                                desiredFromAddress: selected?.desiredFromAddress)
         modelContext.insert(newRule)
         newEmail = ""

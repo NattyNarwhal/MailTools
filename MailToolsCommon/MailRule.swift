@@ -82,6 +82,6 @@ public enum RuleTarget: Codable, Hashable, Comparable, CustomStringConvertible {
     }
     
     public convenience init() {
-        self.init(target: .default, checkHtml: false, checkTopPosting: false, maxColumnSize: 72, desiredFromAddress: nil)
+        self.init(target: .default, checkHtml: false, checkTopPosting: false, maxColumnSize: nil, desiredFromAddress: nil)
     }
 }
