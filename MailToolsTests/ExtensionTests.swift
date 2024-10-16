@@ -4,6 +4,9 @@
 //
 //  Created by Calvin Buckley on 2024-10-02.
 //
+//  Copyright (c) 2024 Calvin Buckley
+//  SPDX-License-Identifier: MPL-2.0
+//
 
 @testable import MailToolsCommon
 import Testing

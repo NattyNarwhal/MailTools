@@ -4,6 +4,9 @@
 //
 //  Created by Calvin Buckley on 2024-09-30.
 //
+//  Copyright (c) 2024 Calvin Buckley
+//  SPDX-License-Identifier: MPL-2.0
+//
 
 import Foundation
 

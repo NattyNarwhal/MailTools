@@ -4,6 +4,9 @@
 //
 //  Created by Calvin Buckley on 2024-10-05.
 //
+//  Copyright (c) 2024 Calvin Buckley
+//  SPDX-License-Identifier: MPL-2.0
+//
 
 import SwiftUI
 import SwiftData
