@@ -15,14 +15,14 @@ import MailToolsCommon
 @main
 struct MailToolsApp: App {
     var body: some Scene {
-        Settings {
-            SettingsView()
-        }
-        .modelContainer(ModelContainer.sharedModelContainer)
         Window("MailTools", id: "mainWindow") {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentSize)
+        Settings {
+            SettingsView()
+        }
+        .modelContainer(ModelContainer.sharedModelContainer)
     }
 }
