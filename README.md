@@ -24,5 +24,13 @@ This uses SwiftData and other new features, so it requires macOS 14.
 
 Building is only tested on Xcode 16.
 
+## Usage
+
+Open MailTools.app to learn how to turn on the mail extension in Mail.app.
+
+From MailTools.app you can add rules that will be automatically applied when
+writing an email for that receipient. Or, you can manually override settings
+per email by clicking the extension's toolbar icon in the compose window.
+
 [mailext]: https://support.apple.com/en-ca/guide/mail/mlhla9a93cd5/mac
 [pedantry]: https://useplaintext.email/#etiquette
